@@ -2,14 +2,14 @@
 name = "Cell_Simulation"
 version = "0.1.0"
 edition = "2021"
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = {git = "https://github.com/bevyengine/bevy.git", rev = "b697e73", features = ["dynamic"]}
+bevy = {git = "https://github.com/bevyengine/bevy.git", rev = "b697e73", default-features = false}
 bevy_egui = { path = "deps/bevy_egui-0.12.1" }
 bevy_fly_camera = "0.8.0"
 bytemuck = "*"
+bevy_dylib = "0.6.0"
 rand = "*"
 futures-lite = "1.12.0"
 

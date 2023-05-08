@@ -7,6 +7,7 @@ name = "Cell_Simulation"
 version = "0.1.0"
 dependencies = [
  "bevy 0.6.0",
+ "bevy_dylib 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "bevy_egui",
  "bevy_fly_camera",
  "bytemuck",
@@ -220,7 +221,7 @@ name = "bevy"
 version = "0.6.0"
 source = "git+https://github.com/bevyengine/bevy.git?rev=b697e73#b697e73c3d861c209152ccfb140ae00fbc6e9925"
 dependencies = [
- "bevy_dylib",
+ "bevy_dylib 0.6.0 (git+https://github.com/bevyengine/bevy.git?rev=b697e73)",
  "bevy_internal 0.6.0 (git+https://github.com/bevyengine/bevy.git?rev=b697e73)",
 ]
 
@@ -493,6 +494,15 @@ dependencies = [
  "bevy_ecs 0.6.0",
  "bevy_log 0.6.0 (git+https://github.com/bevyengine/bevy.git?rev=b697e73)",
  "bevy_utils 0.6.0 (git+https://github.com/bevyengine/bevy.git?rev=b697e73)",
+]
+
+[[package]]
+name = "bevy_dylib"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "37e4fbd14b69af53cd9638c1071b74a3f66fc2ae826fa7c8f02ff15a65d65fd3"
+dependencies = [
+ "bevy_internal 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
