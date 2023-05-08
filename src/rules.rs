@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use std::ops::RangeInclusive;
 
-use crate::{neighbours:NeighbourMethod, utils};
+use crate::{neighbours::NeighbourMethod, utils};
 
 #[derive(Clone , Copy , PartialEq)]
 pub struct Value (
