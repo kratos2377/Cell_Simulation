@@ -26,5 +26,6 @@ fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut sims: ResMut<cells::Sims>,
 ) {
-
+    sims.add_sim("Default Simulation Type".into(),
+    Box::new(cells::CellSimulation::new()));
 }
