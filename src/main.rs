@@ -1,5 +1,5 @@
 use bevy::{prelude::*, render::view::NoFrustumCulling};
-use bevy_egui::{EguiPlugin};
+use bevy_egui::{ EguiPlugin};
 use rotating_camera::{RotatingCamera, RotatingCameraPlugin};
 use event::CellStatesChangedEvent;
 pub mod event;
@@ -14,7 +14,6 @@ use rules::*;
 
 mod simulation;
 use simulation::sims::Example;
-
 
 fn main() {
    let mut task_pool_settings = DefaultTaskPoolOptions::default();

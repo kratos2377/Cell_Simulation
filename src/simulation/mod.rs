@@ -1,5 +1,5 @@
 use bevy::{tasks::TaskPool};
-use crate::{rule::Rule, renderer::CellRenderer};
+use crate::{rules::Rule, renderer::CellRenderer};
 
 
 pub trait Sim: Send + Sync {

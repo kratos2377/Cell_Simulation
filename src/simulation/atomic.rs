@@ -7,7 +7,7 @@ use futures_lite::future;
 
 use crate::{
     renderer::{CellRenderer},
-    rule::Rule,
+    rules::Rule,
     utils::{self},
 };
 use crate::simulation::Sim;

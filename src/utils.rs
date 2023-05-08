@@ -14,7 +14,7 @@ pub fn wrap(pos: IVec3, bounds: i32) -> IVec3 {
     (pos+bounds)%bounds
 }
 
-pub fn dist_to_center(cell_Pos: IVec3, bounds: i32) -> f32 {
+pub fn dist_to_center(cell_pos: IVec3, bounds: i32) -> f32 {
     let cell_pos = cell_pos - center(bounds);
     let max = bounds as f32 / 2.0;
     cell_pos.as_vec3().length() / max

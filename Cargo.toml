@@ -6,10 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.6"
-bytemuck = { version = "1.13.0", features = ["derive"] }
-bevy_egui = "0.12.1"
+bevy = {git = "https://github.com/bevyengine/bevy.git", rev = "b697e73", features = ["dynamic"]}
+bevy_egui = { path = "deps/bevy_egui-0.12.1" }
 bevy_fly_camera = "0.8.0"
+bytemuck = "*"
 rand = "*"
 futures-lite = "1.12.0"
 

@@ -1,12 +1,12 @@
 use bevy::{
-    prelude::*,
+    prelude::{Plugin, Res, ResMut, Query, Color},
     tasks::AsyncComputeTaskPool,
-}
+};
 
 use bevy_egui::{egui,EguiContext};
 use crate::{
     simulation::Sim,
-    rule::{Rule , ColorMethod},
+    rules::{Rule , ColorMethod},
     neighbours::NeighbourMethod,
     renderer::{InstanceMaterialData, InstanceData, CellRenderer},
     utils,
@@ -38,7 +38,6 @@ pub struct Sims {
     examples: Vec<Example>,
 }
 
-pub struct SimsPlugin;
 
 impl Sims {
     pub fn new() -> Sims {
@@ -243,6 +242,7 @@ pub fn update(
 
 
 
+pub struct SimsPlugin;
 impl Plugin for SimsPlugin {
     fn build(&self, app: &mut bevy::prelude::App) {
         app
