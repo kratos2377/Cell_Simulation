@@ -25,12 +25,9 @@ fn main() {
    task_pool_settings.io.percent = 0.0 as f32;
 
    App::new()
-   
        .add_plugins(DefaultPlugins.set(WindowPlugin {
-        // Set default window settings
-        // Adapted from: https://github.com/bevyengine/bevy/blob/main/examples/window/window_settings.rs
         primary_window: Some(Window {
-            title: "3D Cellular Automata".into(),
+            title: "Cell Simulation".into(),
             resolution: (1920., 1080.).into(),
             present_mode: PresentMode::AutoNoVsync,
             // WASM config
@@ -42,11 +39,11 @@ fn main() {
     }))
     .insert_resource(task_pool_settings)
        .add_plugin(EguiPlugin)
-       .insert_resource(ClearColor(Color::rgb(0.65f32, 0.9f32, 0.96f32)))
+       .insert_resource(ClearColor(Color::rgb(0.0 as f32, 0.0 as f32, 0.0 as f32)))
        .add_plugin(NoCameraPlayerPlugin)
        .insert_resource(MovementSettings {
-        sensitivity: 0.00015, // default: 0.00012
-        speed: 25.0,          // default: 12.0
+        sensitivity: 0.00015, 
+        speed: 25.0,          
     })
     // Change key bindings
     .insert_resource(KeyBindings {
@@ -72,7 +69,7 @@ fn setup(
 
 
     sims.add_example(Example {
-        name: "builder".into(),
+        name: "Constructor".into(),
         rule: Rule {
             survival_rule: Value::new(&[2, 6, 9]),
             birth_rule: Value::new(&[4, 6, 8, 9, 10]),
@@ -98,7 +95,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "fancy snancy".into(),
+        name: "Fancy Snancy".into(),
         rule: Rule {
             survival_rule: Value::new(&[0,1,2,3,7,8,9,11,13,18,21,22,24,26]),
             birth_rule: Value::new(&[4,13,17,20,21,22,23,24,26]),
@@ -111,7 +108,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "pretty crystals".into(),
+        name: "Pretty Crystals".into(),
         rule: Rule {
             survival_rule: Value::new(&[5,6,7,8]),
             birth_rule: Value::new(&[6,7,9]),
@@ -124,7 +121,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "swapping structures".into(),
+        name: "Swapping Structures".into(),
         rule: Rule {
             survival_rule: Value::new(&[3,6,9]),
             birth_rule: Value::new(&[4,8,10]),
@@ -137,7 +134,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "slowly expanding blob".into(),
+        name: "Slowly Expanding Blob".into(),
         rule: Rule {
             survival_rule: Value::from_range(9..=26),
             birth_rule: Value::new(&[5,6,7,12,13,15]),
@@ -150,7 +147,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "445".into(),
+        name: "4/4/5-Rule".into(),
         rule: Rule {
             survival_rule: Value::new(&[4]),
             birth_rule: Value::new(&[4]),
@@ -163,7 +160,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "expand then die".into(),
+        name: "Growth and Decay".into(),
         rule: Rule {
             survival_rule: Value::new(&[4]),
             birth_rule: Value::new(&[3]),
@@ -176,7 +173,7 @@ fn setup(
     });
 
     sims.add_example(Example {
-        name: "no idea what to call this".into(),
+        name: "Electric Smoke".into(),
         rule: Rule {
             survival_rule: Value::new(&[6,7]),
             birth_rule: Value::new(&[4,6,9,10,11]),
@@ -202,7 +199,7 @@ fn setup(
     });
 
 
-    sims.set_example(0);
+    sims.set_example(2);
 
     commands.spawn((
         meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
