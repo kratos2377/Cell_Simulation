@@ -62,7 +62,7 @@ fn queue_custom(
     custom_pipeline: Res<CellPipeline>,
     msaa: Res<Msaa>,
     mut pipelines: ResMut<SpecializedMeshPipelines<CellPipeline>>,
-    mut pipeline_cache: ResMut<PipelineCache>,
+    pipeline_cache: ResMut<PipelineCache>,
     meshes: Res<RenderAssets<Mesh>>,
     material_meshes: Query<
         (Entity, &MeshUniform, &Handle<Mesh>),
@@ -70,28 +70,24 @@ fn queue_custom(
     >,
     mut views: Query<(&ExtractedView, &mut RenderPhase<Transparent3d>)>,
 ) {
-    let draw_custom = transparent_3d_draw_functions
-        .read()
-        .get_id::<DrawCustom>()
-        .unwrap();
+    let draw_custom = transparent_3d_draw_functions.read().id::<DrawCustom>();
 
     let msaa_key = MeshPipelineKey::from_msaa_samples(msaa.samples());
 
-    for (view, mut transparent_phase) in views.iter_mut() {
-        let view_matrix = view.transform.compute_matrix();
-        let view_row_2 = view_matrix.row(2);
-        for (entity, mesh_uniform, mesh_handle) in material_meshes.iter() {
+    for (view, mut transparent_phase) in &mut views {
+        let rangefinder = view.rangefinder3d();
+        for (entity, mesh_uniform, mesh_handle) in &material_meshes {
             if let Some(mesh) = meshes.get(mesh_handle) {
                 let key =
                     msaa_key | MeshPipelineKey::from_primitive_topology(mesh.primitive_topology);
                 let pipeline = pipelines
-                    .specialize(&mut pipeline_cache, &custom_pipeline, key, &mesh.layout)
+                    .specialize(&pipeline_cache, &custom_pipeline, key, &mesh.layout)
                     .unwrap();
                 transparent_phase.add(Transparent3d {
                     entity,
                     pipeline,
                     draw_function: draw_custom,
-                    distance: view_row_2.dot(mesh_uniform.transform.col(3)),
+                    distance: rangefinder.distance(&mesh_uniform.transform),
                 });
             }
         }
@@ -122,6 +118,7 @@ fn prepare_instance_buffers(
     }
 }
 
+#[derive(Resource)]
 pub struct CellPipeline {
     shader: Handle<Shader>,
     mesh_pipeline: MeshPipeline,
@@ -142,7 +139,6 @@ impl FromWorld for CellPipeline {
     }
 }
 
-impl Resource for CellPipeline{}
 
 impl SpecializedMeshPipeline for CellPipeline {
     type Key = MeshPipelineKey;
