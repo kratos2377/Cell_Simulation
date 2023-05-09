@@ -20,8 +20,9 @@ pub trait Sim: Send + Sync {
     fn set_bounds(&mut self, new_bounds: i32) -> i32;
 }
 
-mod atomic;
-pub use atomic::*;
-
 pub mod sims;
 pub use sims::*;
+mod atomic;
+pub use atomic::*;
+pub mod settings;
+pub use settings::*;

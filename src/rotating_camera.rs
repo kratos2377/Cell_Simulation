@@ -1,5 +1,8 @@
-use bevy::math::{vec3, Quat};
-use bevy::prelude::*;
+use bevy::{
+    ecs::component::Component,
+    math::{vec3, Quat},
+    prelude::{App, Plugin, Query, Transform, Vec3},
+};
 
 #[derive(Component)]
 pub struct RotatingCamera {
@@ -16,7 +19,7 @@ impl Default for RotatingCamera {
             rotation: 0f32,
             last_tick: 0f32,
             speed: 0.01f32,
-            dist: 150f32,
+            dist: 200f32,
             center: vec3(0.0, 0.0, 0.0),
         }
     }
@@ -29,11 +32,9 @@ impl Plugin for RotatingCameraPlugin {
     }
 }
 
-pub fn update_tick(
-    mut cameras: Query<(&mut RotatingCamera, &mut Transform)>,
-) {
+pub fn update_tick(mut cameras: Query<(&mut RotatingCamera, &mut Transform)>) {
     for (mut camera, mut transform) in cameras.iter_mut() {
-        let delta = 1.0f32;
+        let delta = 0.5f32;
         camera.rotation += delta * camera.speed;
         let rotation = Quat::from_axis_angle(Vec3::Y, camera.rotation);
         transform.translation = camera.center + (rotation * Vec3::Z * camera.dist);

@@ -14,8 +14,15 @@ pub fn wrap(pos: IVec3, bounds: i32) -> IVec3 {
     (pos+bounds)%bounds
 }
 
+pub fn state_colour(colour1: Color, colour2: Color, gradient: f32) -> Color {
+    let c1: Vec4 = colour1.into();
+    let c2: Vec4 = colour2.into();
+    let grad = gradient.clamp(0.0, 1.0);
+    ((1.0 - grad) * c1 + grad * c2).into()
+}
+
 pub fn dist_to_center(cell_pos: IVec3, bounds: i32) -> f32 {
-    let cell_pos = cell_pos - center(bounds);
+    let cell_pos = cell_pos - get_center(bounds);
     let max = bounds as f32 / 2.0;
     cell_pos.as_vec3().length() / max
 }
@@ -69,7 +76,7 @@ pub fn get_bounding_ranges(bounds: i32)
     (x_range, y_range, z_range)
 }
 
-pub fn center(bounds: i32) -> IVec3 {
+pub fn get_center(bounds: i32) -> IVec3 {
     let center = bounds/2;
     ivec3(center, center, center)
 }

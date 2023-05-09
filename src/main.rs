@@ -1,9 +1,12 @@
-use bevy::{prelude::*, render::view::NoFrustumCulling, tasks::AsyncComputeTaskPool};
+use bevy::{prelude::*, render::view::{NoFrustumCulling, ComputedVisibility , Visibility}};
 use bevy_egui::{ EguiPlugin};
-use rotating_camera::{RotatingCamera, RotatingCameraPlugin};
-use event::CellStatesChangedEvent;
+use bevy::diagnostic::{FrameTimeDiagnosticsPlugin,};
+use bevy::window::PresentMode;
+use bevy_flycam::prelude::*;
+use crate::color_method::*;
 pub mod event;
 mod renderer;
+mod color_method;
 mod neighbours;
 mod rotating_camera;
 mod rules;
@@ -22,12 +25,36 @@ fn main() {
    task_pool_settings.io.percent = 0.0 as f32;
 
    App::new()
-       .insert_resource(task_pool_settings)
-       .add_plugins(DefaultPlugins)
+   
+       .add_plugins(DefaultPlugins.set(WindowPlugin {
+        // Set default window settings
+        // Adapted from: https://github.com/bevyengine/bevy/blob/main/examples/window/window_settings.rs
+        primary_window: Some(Window {
+            title: "3D Cellular Automata".into(),
+            resolution: (1920., 1080.).into(),
+            present_mode: PresentMode::AutoNoVsync,
+            // WASM config
+            fit_canvas_to_parent: true,
+            prevent_default_event_handling: false,
+            ..default()
+        }),
+        ..default()
+    }))
+    .insert_resource(task_pool_settings)
        .add_plugin(EguiPlugin)
        .insert_resource(ClearColor(Color::rgb(0.65f32, 0.9f32, 0.96f32)))
-       .add_event::<CellStatesChangedEvent>()
-       .add_plugin(RotatingCameraPlugin)
+       .add_plugin(NoCameraPlayerPlugin)
+       .insert_resource(MovementSettings {
+        sensitivity: 0.00015, // default: 0.00012
+        speed: 25.0,          // default: 12.0
+    })
+    // Change key bindings
+    .insert_resource(KeyBindings {
+        move_ascend: KeyCode::LShift,
+        move_descend: KeyCode::LControl,
+        ..Default::default()
+    })
+       .add_plugin(FrameTimeDiagnosticsPlugin::default())
        .add_plugin(CellMaterialPlugin)
        .add_plugin(simulation::SimsPlugin)
        .add_startup_system(setup)
@@ -78,7 +105,7 @@ fn setup(
             states: 4,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::RED,
         color2: Color::BLUE,
     });
@@ -104,7 +131,7 @@ fn setup(
             states: 20,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::RED,
         color2: Color::GREEN,
     });
@@ -117,7 +144,7 @@ fn setup(
             states: 20,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::YELLOW,
         color2: Color::BLUE,
     });
@@ -130,7 +157,7 @@ fn setup(
             states: 5,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::BLACK,
         color2: Color::RED,
     });
@@ -143,7 +170,7 @@ fn setup(
             states: 20,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::BLACK,
         color2: Color::RED,
     });
@@ -156,7 +183,7 @@ fn setup(
             states: 6,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::BLUE,
         color2: Color::RED,
     });
@@ -169,7 +196,7 @@ fn setup(
             states: 35,
             neighbour_method: NeighbourMethod::Moore,
         },
-        color_method: ColorMethod::StateLerp,
+        color_method: ColorMethod::State,
         color1: Color::BLUE,
         color2: Color::RED,
     });
@@ -177,7 +204,7 @@ fn setup(
 
     sims.set_example(0);
 
-    commands.insert_resource((
+    commands.spawn((
         meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         Transform::from_xyz(0.0, 0.0, 0.0),
         GlobalTransform::default(),
@@ -198,10 +225,9 @@ fn setup(
 
 
     // camera
-    commands
-        .spawn_bundle(Camera3dBundle {
+    commands.spawn(Camera3dBundle {
             transform: Transform::from_xyz(0.0, 0.0, 15.0).looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         })
-        .insert(RotatingCamera::default());
+        .insert(FlyCam);
 }

@@ -1,22 +1,14 @@
-use bevy::prelude::*;
 use std::ops::RangeInclusive;
 
-use crate::{neighbours::NeighbourMethod, utils};
+use crate::{neighbours::NeighbourMethod};
 
 #[derive(Clone , Copy , PartialEq)]
 pub struct Value (
     [bool;27]
 );
 
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum ColorMethod {
-    Single,
-    StateLerp,
-    DistToCenter,
-    Neighbour,
-}
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq , Copy )]
 pub struct Rule {
     pub survival_rule: Value,
     pub birth_rule: Value,
@@ -44,6 +36,25 @@ impl Value {
         result
     }
 
+    pub fn is_valid(&self, value: u8) -> bool {
+        if (value as usize) < self.0.len() {
+            *self.0.get(value as usize).unwrap()
+        } else {
+            false
+        }
+    }
+
+    // Change the state of a value
+    pub fn change_value(mut self, index: usize) -> Self {
+        self.0[index] = !self.0[index];
+        return self;
+    }
+
+    // Get a specified value
+    pub fn get_value(self, index: usize) -> bool {
+        self.0[index]
+    }
+
     #[allow(dead_code)]
     pub fn in_range(&self, value: u8) -> bool {
         self.0[value as usize]
@@ -51,24 +62,5 @@ impl Value {
 
     pub fn in_range_incorrect(&self, value: u8) -> bool {
         *self.0.get(value as usize).unwrap_or(&false)
-    }
-}
-
-impl ColorMethod {
-    pub fn color(&self, c1: Color, c2: Color, states: u8, state: u8, neighbours: u8, dist_to_center: f32) -> Color {
-        match self {
-            ColorMethod::Single => c1,
-            ColorMethod::StateLerp => {
-                let dt = state as f32 / states as f32;
-                utils::lerp_color(c1, c2, dt)
-            }
-            ColorMethod::DistToCenter => {
-                utils::lerp_color(c1, c2, dist_to_center)
-            }
-            ColorMethod::Neighbour => {
-                let dt = neighbours as f32 / 26f32;
-                utils::lerp_color(c1, c2, dt)
-            }
-        }
     }
 }

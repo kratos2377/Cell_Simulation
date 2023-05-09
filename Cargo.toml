@@ -5,12 +5,30 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = "0.9"
-bevy_egui = "0.19"
-bevy_fly_camera = "0.10.0"
+bevy = "0.10.0"
+bevy_egui = "0.20.1"
 bytemuck = "*"
 rand = "*"
 futures-lite = "1.12.0"
+bevy_flycam = { git = "https://github.com/sburris0/bevy_flycam" }
+num_cpus = "1.15.0"
+approx = "0.5.1"
 
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3
+
+# Enable high optimizations in the release profile
 [profile.release]
-debug = 1
+opt-level = 3
+
+# Source: Bevy Examples
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
