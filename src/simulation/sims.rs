@@ -1,6 +1,7 @@
 use bevy::{
-    prelude::{Plugin, Res, ResMut, Query, Color},
-    tasks::AsyncComputeTaskPool,
+    prelude::{Plugin, ResMut, Query, Color, Resource},
+    utils::futures,
+    ecs::world::{FromWorld , World}
 };
 
 use bevy_egui::{egui,EguiContext};
@@ -92,11 +93,26 @@ impl Sims {
     }
 }
 
+impl Resource for Sims {
+
+}
+
+struct AsyncComputeTaskPool(pub(crate) futures::executor::ThreadPool);
+
+impl FromWorld for AsyncComputeTaskPool {
+    fn from_world(world: &mut World) -> Self {
+        let thread_pool = futures::executor::ThreadPool::new().unwrap();
+        AsyncComputeTaskPool(thread_pool)
+    }
+}
+
+impl Resource for AsyncComputeTaskPool {}
+
 
 pub fn update(
     mut this: ResMut<Sims>,
     mut query: Query<&mut InstanceMaterialData>,
-    task_pool: Res<AsyncComputeTaskPool>,
+    task_pool: ResMut<AsyncComputeTaskPool>,
     mut egui_context: ResMut<EguiContext>
 ) {
     if this.active_sim > this.sims.len() {

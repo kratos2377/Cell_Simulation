@@ -1,4 +1,4 @@
-use bevy::{prelude::*, render::view::NoFrustumCulling};
+use bevy::{prelude::*, render::view::NoFrustumCulling, tasks::AsyncComputeTaskPool};
 use bevy_egui::{ EguiPlugin};
 use rotating_camera::{RotatingCamera, RotatingCameraPlugin};
 use event::CellStatesChangedEvent;
@@ -16,7 +16,7 @@ mod simulation;
 use simulation::sims::Example;
 
 fn main() {
-   let mut task_pool_settings = DefaultTaskPoolOptions::default();
+   let mut task_pool_settings = TaskPoolOptions::default();
    task_pool_settings.async_compute.percent = 1.0 as f32;
    task_pool_settings.compute.percent = 0.0 as f32;
    task_pool_settings.io.percent = 0.0 as f32;
@@ -177,8 +177,7 @@ fn setup(
 
     sims.set_example(0);
 
-
-    commands.spawn().insert_bundle((
+    commands.insert_resource((
         meshes.add(Mesh::from(shape::Cube { size: 1.0 })),
         Transform::from_xyz(0.0, 0.0, 0.0),
         GlobalTransform::default(),
@@ -194,19 +193,13 @@ fn setup(
         ),
         Visibility::default(),
         ComputedVisibility::default(),
-        // NOTE: Frustum culling is done based on the Aabb of the Mesh and the GlobalTransform.
-        // As the cube is at the origin, if its Aabb moves outside the view frustum, all the
-        // instanced cubes will be culled.
-        // The InstanceMaterialData contains the 'GlobalTransform' information for this custom
-        // instancing, and that is not taken into account with the built-in frustum culling.
-        // We must disable the built-in frustum culling by adding the `NoFrustumCulling` marker
-        // component to avoid incorrect culling.
         NoFrustumCulling,
     ));
 
+
     // camera
     commands
-        .spawn_bundle(PerspectiveCameraBundle {
+        .spawn_bundle(Camera3dBundle {
             transform: Transform::from_xyz(0.0, 0.0, 15.0).looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         })

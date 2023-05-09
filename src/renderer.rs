@@ -1,5 +1,5 @@
 use bevy::{
-    core_pipeline::Transparent3d,
+    core_pipeline::core_3d::Transparent3d,
     ecs::system::{lifetimeless::*, SystemParamItem},
     math::prelude::*,
     pbr::{MeshPipeline, MeshPipelineKey, MeshUniform, SetMeshBindGroup, SetMeshViewBindGroup},
@@ -7,15 +7,15 @@ use bevy::{
     render::{
         mesh::{GpuBufferInfo, MeshVertexBufferLayout},
         render_asset::RenderAssets,
-        render_component::{ExtractComponent, ExtractComponentPlugin},
+        extract_component::{ExtractComponent, ExtractComponentPlugin},
         render_phase::{
             AddRenderCommand, DrawFunctions, EntityRenderCommand, RenderCommandResult, RenderPhase,
-            SetItemPipeline, TrackedRenderPass,
+            SetItemPipeline, TrackedRenderPass, Draw,
         },
         render_resource::*,
         renderer::RenderDevice,
         view::{ExtractedView, Msaa},
-        RenderApp, RenderStage,
+        RenderApp,
     },
 };
 use bytemuck::{Pod, Zeroable};
@@ -42,8 +42,8 @@ impl Plugin for CellMaterialPlugin {
             .add_render_command::<Transparent3d, DrawCustom>()
             .init_resource::<CellPipeline>()
             .init_resource::<SpecializedMeshPipelines<CellPipeline>>()
-            .add_system_to_stage(RenderStage::Queue, queue_custom)
-            .add_system_to_stage(RenderStage::Prepare, prepare_instance_buffers);
+            .add_system_to_stage(Draw::Queue, queue_custom)
+            .add_system_to_stage(Draw::Prepare, prepare_instance_buffers);
     }
 }
 
@@ -61,7 +61,7 @@ fn queue_custom(
     custom_pipeline: Res<CellPipeline>,
     msaa: Res<Msaa>,
     mut pipelines: ResMut<SpecializedMeshPipelines<CellPipeline>>,
-    mut pipeline_cache: ResMut<RenderPipelineCache>,
+    mut pipeline_cache: ResMut<PipelineCache>,
     meshes: Res<RenderAssets<Mesh>>,
     material_meshes: Query<
         (Entity, &MeshUniform, &Handle<Mesh>),
@@ -141,6 +141,8 @@ impl FromWorld for CellPipeline {
         }
     }
 }
+
+impl Resource for CellPipeline{}
 
 impl SpecializedMeshPipeline for CellPipeline {
     type Key = MeshPipelineKey;
