@@ -1,5 +1,6 @@
 use bevy::{prelude::*, render::view::{NoFrustumCulling, ComputedVisibility , Visibility}};
 use bevy_egui::{ EguiPlugin};
+use std::time::Duration;
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin,};
 use bevy::window::PresentMode;
 use bevy_flycam::prelude::*;
@@ -220,10 +221,10 @@ fn setup(
         NoFrustumCulling,
     ));
 
-
     commands.spawn(Camera3dBundle {
             transform: Transform::from_xyz(50.0, 25.0, 100.0).looking_at(Vec3::ZERO, Vec3::Y),
             ..Default::default()
         })
         .insert(FlyCam);
 }
+

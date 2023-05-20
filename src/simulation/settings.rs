@@ -1,6 +1,6 @@
 use bevy::diagnostic::{Diagnostics, FrameTimeDiagnosticsPlugin};
 use bevy::prelude::{ClearColor, Color, Res, ResMut};
-
+use bevy::render::camera::Camera;
 use bevy_egui::egui::FontFamily::Proportional;
 use bevy_egui::egui::{color_picker, FontId, Style, Ui, Vec2};
 use bevy_egui::{
@@ -8,6 +8,7 @@ use bevy_egui::{
     egui::{Checkbox, ComboBox, Grid, Slider, TextStyle::*, Window},
     EguiContexts,
 };
+use std::fs;
 // use bevy_egui::egui::{SidePanel, panel::Side::Left,};
 
 use crate::neighbours::NeighbourMethod::*;
@@ -36,7 +37,7 @@ pub fn settings_ui(
 
     // Try this out!
     // SidePanel::new(Left, "Settings")
-    Window::new("Settings")
+    Window::new("Simulation Settings")
         .resizable(false)
         .show(contexts.ctx_mut(), |ui| {
             // Change default styling
@@ -277,6 +278,7 @@ pub fn settings_ui(
             current.rule = Some(rule);
         });
 }
+
 
 // Add buttons to change sims
 fn examples_ui(current: &mut ResMut<Sims>, ui: &mut Ui) {
