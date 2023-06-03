@@ -78,8 +78,8 @@ fn setup(
             neighbour_method: NeighbourMethod::Moore,
         },
         color_method: ColorMethod::DistToCenter,
-        color1: Color::YELLOW,
-        color2: Color::RED,
+        color1: Color::GREEN,
+        color2: Color::CYAN,
     });
 
     sims.add_example(Example {
@@ -91,8 +91,8 @@ fn setup(
             neighbour_method: NeighbourMethod::VonNeuman,
         },
         color_method: ColorMethod::DistToCenter,
-        color1: Color::GREEN,
-        color2: Color::BLUE,
+        color1: Color::YELLOW,
+        color2: Color::BISQUE,
     });
 
     sims.add_example(Example {
@@ -183,7 +183,7 @@ fn setup(
         },
         color_method: ColorMethod::State,
         color1: Color::BLUE,
-        color2: Color::RED,
+        color2: Color::YELLOW_GREEN,
     });
 
     sims.add_example(Example {
